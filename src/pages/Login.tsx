@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { GraduationCap, Mail, Lock, Eye, EyeOff, ArrowRight } from "lucide-react";
 import { toast } from "sonner";
+import bgGradientLight from "@/assets/bg-gradient-light.jpg";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -31,6 +32,13 @@ const Login = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center p-4 relative overflow-hidden">
+      {/* Background Image */}
+      <div 
+        className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+        style={{ backgroundImage: `url(${bgGradientLight})` }}
+      />
+      <div className="absolute inset-0 bg-background/70" />
+      
       {/* Background Effects */}
       <div className="absolute inset-0 overflow-hidden">
         <motion.div
