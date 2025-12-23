@@ -13,6 +13,7 @@ import {
   Plus,
   X
 } from "lucide-react";
+import bgGradientLight from "@/assets/bg-gradient-light.jpg";
 import { toast } from "sonner";
 
 type SchoolType = "primary" | "middle" | "high" | null;
@@ -91,6 +92,13 @@ const TeacherSetup = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center p-4 relative overflow-hidden">
+      {/* Background Image */}
+      <div 
+        className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+        style={{ backgroundImage: `url(${bgGradientLight})` }}
+      />
+      <div className="absolute inset-0 bg-background/70" />
+      
       {/* Background */}
       <div className="absolute inset-0 overflow-hidden">
         <motion.div
