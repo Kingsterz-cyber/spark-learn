@@ -7,9 +7,11 @@ import { Label } from "@/components/ui/label";
 import { GraduationCap, Mail, Lock, Eye, EyeOff, ArrowRight } from "lucide-react";
 import { toast } from "sonner";
 import ThemeBackground from "@/components/ThemeBackground";
+import { useAuth } from "@/hooks/useAuth";
 
 const Login = () => {
   const navigate = useNavigate();
+  const { signIn, role } = useAuth();
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({
@@ -21,13 +23,21 @@ const Login = () => {
     e.preventDefault();
     setIsLoading(true);
     
-    // Simulate login - replace with actual auth
-    setTimeout(() => {
-      setIsLoading(false);
-      toast.success("Welcome back!");
-      // Navigate based on stored role (simulated)
-      navigate("/dashboard");
-    }, 1500);
+    const { error } = await signIn(formData.email, formData.password);
+    
+    setIsLoading(false);
+    
+    if (error) {
+      if (error.message.includes('Invalid login credentials')) {
+        toast.error("Invalid email or password");
+      } else {
+        toast.error(error.message);
+      }
+      return;
+    }
+    
+    toast.success("Welcome back!");
+    // Navigation will be handled by the role-based redirect in App.tsx
   };
 
   return (
