@@ -16,6 +16,7 @@ import {
   Bell
 } from "lucide-react";
 import { Link } from "react-router-dom";
+import ThemeToggle from "@/components/ThemeToggle";
 
 const TeacherDashboard = () => {
   const [activeClass, setActiveClass] = useState("2A");
@@ -125,7 +126,8 @@ const TeacherDashboard = () => {
               Manage your classes and track student progress
             </p>
           </div>
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-3">
+            <ThemeToggle />
             <button className="relative p-2 rounded-lg bg-muted hover:bg-muted/80 transition-colors">
               <Bell className="w-5 h-5 text-muted-foreground" />
               <span className="absolute top-1 right-1 w-2 h-2 bg-primary rounded-full" />

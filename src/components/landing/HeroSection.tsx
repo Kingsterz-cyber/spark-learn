@@ -2,17 +2,13 @@ import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Sparkles, Play, ArrowRight } from "lucide-react";
-import bgGradientDark from "@/assets/bg-gradient-dark.jpg";
+import ThemeBackground from "@/components/ThemeBackground";
 
 const HeroSection = () => {
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-24 pb-16">
-      {/* Background Image */}
-      <div 
-        className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-        style={{ backgroundImage: `url(${bgGradientDark})` }}
-      />
-      <div className="absolute inset-0 bg-background/60" />
+      {/* Theme-aware Background */}
+      <ThemeBackground variant="dark" overlay="medium" />
       
       {/* Animated Background Elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">

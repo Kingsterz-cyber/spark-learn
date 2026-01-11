@@ -10,7 +10,7 @@ import {
   Check
 } from "lucide-react";
 import { toast } from "sonner";
-import bgGradientDark from "@/assets/bg-gradient-dark.jpg";
+import ThemeBackground from "@/components/ThemeBackground";
 
 type SchoolType = "primary" | "middle" | "high" | null;
 
@@ -43,12 +43,8 @@ const StudentSetup = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center p-4 relative overflow-hidden">
-      {/* Background Image */}
-      <div 
-        className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-        style={{ backgroundImage: `url(${bgGradientDark})` }}
-      />
-      <div className="absolute inset-0 bg-background/60" />
+      {/* Theme-aware Background */}
+      <ThemeBackground variant="dark" overlay="medium" />
       
       {/* Background */}
       <div className="absolute inset-0 overflow-hidden">
