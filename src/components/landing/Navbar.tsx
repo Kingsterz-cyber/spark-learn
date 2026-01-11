@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { GraduationCap, Menu, X } from "lucide-react";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import ThemeToggle from "@/components/ThemeToggle";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -49,6 +50,7 @@ const Navbar = () => {
 
           {/* Auth Buttons - Desktop */}
           <div className="hidden md:flex items-center gap-3">
+            <ThemeToggle />
             <Button variant="ghost" asChild>
               <Link to="/login">Log In</Link>
             </Button>
@@ -88,6 +90,10 @@ const Navbar = () => {
                   </a>
                 ))}
                 <hr className="border-border" />
+                <div className="flex items-center justify-between px-2 py-2">
+                  <span className="text-sm text-muted-foreground">Theme</span>
+                  <ThemeToggle />
+                </div>
                 <div className="flex flex-col gap-2">
                   <Button variant="ghost" asChild className="w-full">
                     <Link to="/login">Log In</Link>
