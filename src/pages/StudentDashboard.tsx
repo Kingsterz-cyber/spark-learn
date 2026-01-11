@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { 
@@ -17,8 +18,10 @@ import {
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import ThemeToggle from "@/components/ThemeToggle";
+import AITutorChat from "@/components/AITutorChat";
 
 const StudentDashboard = () => {
+  const [isChatOpen, setIsChatOpen] = useState(false);
   // Mock data
   const subjects = [
     { name: "Mathematics", progress: 72, lessons: 8, quizzes: 3 },
@@ -180,7 +183,7 @@ const StudentDashboard = () => {
                     <p className="text-sm text-muted-foreground">Get help with any subject instantly</p>
                   </div>
                 </div>
-                <Button variant="hero">
+                <Button variant="hero" onClick={() => setIsChatOpen(true)}>
                   <MessageCircle className="w-4 h-4 mr-2" />
                   Ask AI Tutor
                 </Button>
@@ -287,6 +290,9 @@ const StudentDashboard = () => {
           </div>
         </div>
       </main>
+
+      {/* AI Tutor Chat */}
+      <AITutorChat isOpen={isChatOpen} onClose={() => setIsChatOpen(false)} />
     </div>
   );
 };
