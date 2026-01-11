@@ -7,11 +7,13 @@ import { Label } from "@/components/ui/label";
 import { GraduationCap, Mail, Lock, Eye, EyeOff, User, ArrowRight, Users } from "lucide-react";
 import { toast } from "sonner";
 import ThemeBackground from "@/components/ThemeBackground";
+import { useAuth } from "@/hooks/useAuth";
 
 type UserRole = "teacher" | "student" | null;
 
 const Signup = () => {
   const navigate = useNavigate();
+  const { signUp } = useAuth();
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [selectedRole, setSelectedRole] = useState<UserRole>(null);
@@ -29,14 +31,33 @@ const Signup = () => {
       return;
     }
 
+    if (formData.password.length < 8) {
+      toast.error("Password must be at least 8 characters");
+      return;
+    }
+
     setIsLoading(true);
     
-    // Simulate signup - replace with actual auth
-    setTimeout(() => {
-      setIsLoading(false);
-      toast.success("Account created successfully!");
-      navigate(selectedRole === "teacher" ? "/teacher/setup" : "/student/setup");
-    }, 1500);
+    const { error } = await signUp(
+      formData.email, 
+      formData.password, 
+      formData.name, 
+      selectedRole
+    );
+    
+    setIsLoading(false);
+    
+    if (error) {
+      if (error.message.includes('already registered')) {
+        toast.error("This email is already registered. Please sign in.");
+      } else {
+        toast.error(error.message);
+      }
+      return;
+    }
+    
+    toast.success("Account created successfully!");
+    navigate(selectedRole === "teacher" ? "/teacher/setup" : "/student/setup");
   };
 
   return (
