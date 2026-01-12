@@ -14,40 +14,39 @@ import {
   LogOut,
   Settings,
   Bell,
-  MessageCircle
+  MessageCircle,
+  Flame
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import ThemeToggle from "@/components/ThemeToggle";
 import AITutorChat from "@/components/AITutorChat";
+import SubjectWorkspace from "@/components/student/SubjectWorkspace";
+import { useStudentData } from "@/hooks/useStudentData";
+import { useAuth } from "@/hooks/useAuth";
+
+type DashboardView = 'home' | 'subjects' | 'quizzes' | 'timetable' | 'progress' | 'achievements';
 
 const StudentDashboard = () => {
   const [isChatOpen, setIsChatOpen] = useState(false);
-  // Mock data
-  const subjects = [
-    { name: "Mathematics", progress: 72, lessons: 8, quizzes: 3 },
-    { name: "Science", progress: 65, lessons: 6, quizzes: 2 },
-    { name: "English", progress: 88, lessons: 10, quizzes: 4 },
-    { name: "History", progress: 55, lessons: 5, quizzes: 2 },
-  ];
+  const [activeView, setActiveView] = useState<DashboardView>('home');
+  const [selectedSubject, setSelectedSubject] = useState<any>(null);
+  const { subjects, gamification, earnedBadges, loading, getSubjectProgress, topics } = useStudentData();
+  const { profile, signOut } = useAuth();
 
-  const upcomingTasks = [
-    { type: "quiz", title: "Math Quiz: Algebra", due: "Tomorrow", subject: "Mathematics" },
-    { type: "assignment", title: "Science Report", due: "In 3 days", subject: "Science" },
-    { type: "lesson", title: "Grammar Basics", due: "Today", subject: "English" },
-  ];
-
-  const timetable = [
-    { time: "09:00", subject: "Mathematics", topic: "Fractions" },
-    { time: "10:30", subject: "Science", topic: "Photosynthesis" },
-    { time: "12:00", subject: "English", topic: "Essay Writing" },
-    { time: "14:00", subject: "History", topic: "World War II" },
+  // Navigation items
+  const navItems = [
+    { icon: BookOpen, label: "My Subjects", view: 'subjects' as DashboardView, active: activeView === 'subjects' || activeView === 'home' },
+    { icon: FileText, label: "Quizzes", view: 'quizzes' as DashboardView },
+    { icon: Clock, label: "Timetable", view: 'timetable' as DashboardView },
+    { icon: BarChart3, label: "Progress", view: 'progress' as DashboardView },
+    { icon: Trophy, label: "Achievements", view: 'achievements' as DashboardView },
   ];
 
   const stats = [
-    { label: "Overall Progress", value: "70%", icon: Target, color: "text-primary" },
-    { label: "Quizzes Completed", value: "11", icon: FileText, color: "text-accent" },
-    { label: "Current Streak", value: "5 days", icon: Trophy, color: "text-warning" },
-    { label: "Study Hours", value: "24h", icon: Clock, color: "text-success" },
+    { label: "Total XP", value: gamification?.total_xp || 0, icon: Sparkles, color: "text-primary" },
+    { label: "Current Streak", value: `${gamification?.current_streak || 0} days`, icon: Flame, color: "text-warning" },
+    { label: "Badges Earned", value: earnedBadges.length, icon: Trophy, color: "text-accent" },
+    { label: "Subjects", value: subjects.length, icon: BookOpen, color: "text-success" },
   ];
 
   return (
@@ -88,15 +87,10 @@ const StudentDashboard = () => {
 
         {/* Navigation */}
         <nav className="flex-1 space-y-1">
-          {[
-            { icon: BookOpen, label: "My Subjects", active: true },
-            { icon: FileText, label: "Quizzes" },
-            { icon: Clock, label: "Timetable" },
-            { icon: BarChart3, label: "Progress" },
-            { icon: Trophy, label: "Achievements" },
-          ].map((item) => (
+          {navItems.map((item) => (
             <button
               key={item.label}
+              onClick={() => { setActiveView(item.view); setSelectedSubject(null); }}
               className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg transition-colors ${
                 item.active
                   ? "bg-primary/20 text-primary"
@@ -115,7 +109,10 @@ const StudentDashboard = () => {
             <Settings className="w-5 h-5" />
             <span>Settings</span>
           </button>
-          <button className="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-muted-foreground hover:bg-destructive/20 hover:text-destructive transition-colors">
+          <button 
+            onClick={() => signOut()}
+            className="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-muted-foreground hover:bg-destructive/20 hover:text-destructive transition-colors"
+          >
             <LogOut className="w-5 h-5" />
             <span>Log Out</span>
           </button>
@@ -128,10 +125,10 @@ const StudentDashboard = () => {
         <header className="flex items-center justify-between mb-8">
           <div>
             <h1 className="font-display text-3xl font-bold text-foreground">
-              Good morning, Student!
+              Good morning, {profile?.full_name || 'Student'}!
             </h1>
             <p className="text-muted-foreground">
-              Ready to continue learning?
+              {gamification?.current_streak ? `🔥 ${gamification.current_streak} day streak!` : 'Ready to continue learning?'}
             </p>
           </div>
           <div className="flex items-center gap-3">
@@ -199,36 +196,49 @@ const StudentDashboard = () => {
             >
               <h2 className="font-display text-lg font-semibold text-foreground mb-4">My Subjects</h2>
               <div className="space-y-4">
-                {subjects.map((subject) => (
-                  <button
-                    key={subject.name}
-                    className="w-full flex items-center justify-between p-4 rounded-xl bg-muted/50 hover:bg-muted transition-colors group"
-                  >
-                    <div className="flex items-center gap-4">
-                      <div className="w-12 h-12 rounded-xl bg-primary/20 flex items-center justify-center">
-                        <BookOpen className="w-6 h-6 text-primary" />
-                      </div>
-                      <div className="text-left">
-                        <p className="font-medium text-foreground">{subject.name}</p>
-                        <p className="text-xs text-muted-foreground">
-                          {subject.lessons} lessons • {subject.quizzes} quizzes
-                        </p>
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-4">
-                      <div className="text-right">
-                        <p className="text-sm font-medium text-foreground">{subject.progress}%</p>
-                        <div className="w-24 h-2 bg-muted rounded-full overflow-hidden">
-                          <div 
-                            className="h-full bg-gradient-primary rounded-full transition-all"
-                            style={{ width: `${subject.progress}%` }}
-                          />
+                {loading ? (
+                  <div className="flex items-center justify-center py-8">
+                    <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin" />
+                  </div>
+                ) : subjects.length > 0 ? (
+                  subjects.map((subject) => {
+                    const progress = getSubjectProgress(subject.id);
+                    const topicCount = topics[subject.id]?.length || 0;
+                    return (
+                      <button
+                        key={subject.id}
+                        onClick={() => setSelectedSubject(subject)}
+                        className="w-full flex items-center justify-between p-4 rounded-xl bg-muted/50 hover:bg-muted transition-colors group"
+                      >
+                        <div className="flex items-center gap-4">
+                          <div className="w-12 h-12 rounded-xl bg-primary/20 flex items-center justify-center">
+                            <BookOpen className="w-6 h-6 text-primary" />
+                          </div>
+                          <div className="text-left">
+                            <p className="font-medium text-foreground">{subject.name}</p>
+                            <p className="text-xs text-muted-foreground">
+                              {topicCount} topics
+                            </p>
+                          </div>
                         </div>
-                      </div>
-                      <ChevronRight className="w-5 h-5 text-muted-foreground group-hover:text-foreground transition-colors" />
-                    </div>
-                  </button>
-                ))}
+                        <div className="flex items-center gap-4">
+                          <div className="text-right">
+                            <p className="text-sm font-medium text-foreground">{progress}%</p>
+                            <div className="w-24 h-2 bg-muted rounded-full overflow-hidden">
+                              <div 
+                                className="h-full bg-gradient-primary rounded-full transition-all"
+                                style={{ width: `${progress}%` }}
+                              />
+                            </div>
+                          </div>
+                          <ChevronRight className="w-5 h-5 text-muted-foreground group-hover:text-foreground transition-colors" />
+                        </div>
+                      </button>
+                    );
+                  })
+                ) : (
+                  <p className="text-center text-muted-foreground py-8">No subjects available yet</p>
+                )}
               </div>
             </motion.div>
           </div>
