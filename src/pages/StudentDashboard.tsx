@@ -49,6 +49,21 @@ const StudentDashboard = () => {
     { label: "Subjects", value: subjects.length, icon: BookOpen, color: "text-success" },
   ];
 
+  // Mock timetable data
+  const timetable = [
+    { time: "9:00", subject: "Mathematics", topic: "Fractions & Decimals" },
+    { time: "10:30", subject: "Science", topic: "Plant Biology" },
+    { time: "12:00", subject: "English", topic: "Essay Writing" },
+    { time: "2:00", subject: "History", topic: "Ancient Civilizations" },
+  ];
+
+  // Mock upcoming tasks
+  const upcomingTasks = [
+    { type: "quiz", title: "Algebra Quiz", due: "Tomorrow", subject: "Mathematics" },
+    { type: "assignment", title: "Essay Draft", due: "In 3 days", subject: "English" },
+    { type: "lesson", title: "Cell Biology", due: "This week", subject: "Science" },
+  ];
+
   return (
     <div className="min-h-screen bg-background">
       {/* Sidebar */}
