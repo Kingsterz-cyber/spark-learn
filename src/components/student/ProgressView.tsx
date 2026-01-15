@@ -70,18 +70,18 @@ const ProgressView = ({ onNavigateToSubject }: ProgressViewProps) => {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 sm:space-y-6">
       {/* Header */}
       <motion.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
       >
-        <h1 className="font-display text-3xl font-bold text-foreground">Your Progress</h1>
-        <p className="text-muted-foreground">Track your learning journey</p>
+        <h1 className="font-display text-2xl sm:text-3xl font-bold text-foreground">Your Progress</h1>
+        <p className="text-sm sm:text-base text-muted-foreground">Track your learning journey</p>
       </motion.div>
 
       {/* Stats Overview */}
-      <div className="grid grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
         {[
           { icon: Target, label: "Overall Mastery", value: `${overallCompletion}%`, color: "text-primary" },
           { icon: BookOpen, label: "Topics Completed", value: `${totalTopicsCompleted}/${totalTopics}`, color: "text-success" },
@@ -93,14 +93,14 @@ const ProgressView = ({ onNavigateToSubject }: ProgressViewProps) => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: index * 0.1 }}
-            className="glass-panel rounded-2xl p-5"
+            className="glass-panel rounded-xl sm:rounded-2xl p-3 sm:p-5"
           >
-            <div className="flex items-center justify-between mb-3">
-              <stat.icon className={`w-6 h-6 ${stat.color}`} />
-              <TrendingUp className="w-4 h-4 text-success" />
+            <div className="flex items-center justify-between mb-2 sm:mb-3">
+              <stat.icon className={`w-5 h-5 sm:w-6 sm:h-6 ${stat.color}`} />
+              <TrendingUp className="w-3 h-3 sm:w-4 sm:h-4 text-success" />
             </div>
-            <p className="font-display text-3xl font-bold text-foreground">{stat.value}</p>
-            <p className="text-sm text-muted-foreground">{stat.label}</p>
+            <p className="font-display text-xl sm:text-2xl lg:text-3xl font-bold text-foreground">{stat.value}</p>
+            <p className="text-xs sm:text-sm text-muted-foreground">{stat.label}</p>
           </motion.div>
         ))}
       </div>
@@ -110,20 +110,21 @@ const ProgressView = ({ onNavigateToSubject }: ProgressViewProps) => {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.2 }}
-        className="glass-panel-strong rounded-2xl p-6 border border-primary/30"
+        className="glass-panel-strong rounded-xl sm:rounded-2xl p-4 sm:p-6 border border-primary/30"
       >
-        <div className="flex items-start gap-4">
-          <div className="w-12 h-12 rounded-xl bg-gradient-primary flex items-center justify-center shadow-glow flex-shrink-0">
-            <Brain className="w-6 h-6 text-primary-foreground" />
+        <div className="flex flex-col sm:flex-row items-start gap-3 sm:gap-4">
+          <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-lg sm:rounded-xl bg-gradient-primary flex items-center justify-center shadow-glow flex-shrink-0">
+            <Brain className="w-5 h-5 sm:w-6 sm:h-6 text-primary-foreground" />
           </div>
-          <div className="flex-1">
+          <div className="flex-1 w-full">
             <div className="flex items-center justify-between mb-2">
-              <h3 className="font-display text-lg font-semibold text-foreground">AI Learning Recommendation</h3>
+              <h3 className="font-display text-base sm:text-lg font-semibold text-foreground">AI Learning Recommendation</h3>
               <Button 
                 variant="ghost" 
                 size="sm" 
                 onClick={getAIRecommendation}
                 disabled={aiLoading}
+                className="tap-compact"
               >
                 <Sparkles className={`w-4 h-4 ${aiLoading ? 'animate-spin' : ''}`} />
               </Button>
@@ -131,26 +132,26 @@ const ProgressView = ({ onNavigateToSubject }: ProgressViewProps) => {
             {aiLoading ? (
               <div className="flex items-center gap-2 text-muted-foreground">
                 <div className="w-4 h-4 border-2 border-primary border-t-transparent rounded-full animate-spin" />
-                <span>Analyzing your progress...</span>
+                <span className="text-sm">Analyzing your progress...</span>
               </div>
             ) : (
-              <p className="text-muted-foreground">{aiRecommendation || "Loading recommendations..."}</p>
+              <p className="text-sm sm:text-base text-muted-foreground">{aiRecommendation || "Loading recommendations..."}</p>
             )}
           </div>
         </div>
       </motion.div>
 
       {/* Subject Mastery Grid */}
-      <div className="grid grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
         {/* Mastery Map */}
         <motion.div
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ delay: 0.3 }}
-          className="glass-panel rounded-2xl p-6"
+          className="glass-panel rounded-xl sm:rounded-2xl p-4 sm:p-6"
         >
-          <h3 className="font-display text-lg font-semibold text-foreground mb-4">Subject Mastery</h3>
-          <div className="space-y-4">
+          <h3 className="font-display text-base sm:text-lg font-semibold text-foreground mb-3 sm:mb-4">Subject Mastery</h3>
+          <div className="space-y-3 sm:space-y-4">
             {subjects.map((subject, index) => {
               const subjectProgress = getSubjectProgress(subject.id);
               const mastery = getMasteryLevel(subjectProgress);
@@ -169,12 +170,12 @@ const ProgressView = ({ onNavigateToSubject }: ProgressViewProps) => {
                   className="w-full text-left"
                 >
                   <div className="flex items-center justify-between mb-2">
-                    <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-lg bg-primary/20 flex items-center justify-center">
-                        <BookOpen className="w-5 h-5 text-primary" />
+                    <div className="flex items-center gap-2 sm:gap-3">
+                      <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg bg-primary/20 flex items-center justify-center flex-shrink-0">
+                        <BookOpen className="w-4 h-4 sm:w-5 sm:h-5 text-primary" />
                       </div>
                       <div>
-                        <p className="font-medium text-foreground">{subject.name}</p>
+                        <p className="font-medium text-foreground text-sm sm:text-base">{subject.name}</p>
                         <p className="text-xs text-muted-foreground">
                           {completedTopics}/{subjectTopics.length} topics
                         </p>
@@ -186,12 +187,12 @@ const ProgressView = ({ onNavigateToSubject }: ProgressViewProps) => {
                       </span>
                     </div>
                   </div>
-                  <div className="ml-13">
+                  <div className="ml-10 sm:ml-13">
                     <div className="flex items-center justify-between text-xs mb-1">
                       <span className="text-muted-foreground">Progress</span>
                       <span className="text-primary font-medium">{subjectProgress}%</span>
                     </div>
-                    <Progress value={subjectProgress} className="h-2" />
+                    <Progress value={subjectProgress} className="h-1.5 sm:h-2" />
                   </div>
                 </motion.button>
               );
@@ -204,15 +205,15 @@ const ProgressView = ({ onNavigateToSubject }: ProgressViewProps) => {
           initial={{ opacity: 0, x: 20 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ delay: 0.3 }}
-          className="glass-panel rounded-2xl p-6"
+          className="glass-panel rounded-xl sm:rounded-2xl p-4 sm:p-6"
         >
-          <div className="flex items-center justify-between mb-4">
-            <h3 className="font-display text-lg font-semibold text-foreground">Topic Difficulty Heatmap</h3>
-            <BarChart3 className="w-5 h-5 text-muted-foreground" />
+          <div className="flex items-center justify-between mb-3 sm:mb-4">
+            <h3 className="font-display text-base sm:text-lg font-semibold text-foreground">Topic Difficulty Heatmap</h3>
+            <BarChart3 className="w-4 h-4 sm:w-5 sm:h-5 text-muted-foreground" />
           </div>
           
           {/* Heatmap Grid */}
-          <div className="grid grid-cols-7 gap-1">
+          <div className="grid grid-cols-7 gap-1 sm:gap-1.5">
             {/* Generate a visual heatmap */}
             {Array.from({ length: 28 }).map((_, index) => {
               // Simulate difficulty levels based on progress data
@@ -238,7 +239,7 @@ const ProgressView = ({ onNavigateToSubject }: ProgressViewProps) => {
           </div>
           
           {/* Legend */}
-          <div className="flex items-center justify-center gap-4 mt-4 text-xs text-muted-foreground">
+          <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-4 mt-3 sm:mt-4 text-xs text-muted-foreground">
             <div className="flex items-center gap-1">
               <div className="w-3 h-3 rounded bg-destructive/60" />
               <span>Challenging</span>
@@ -260,27 +261,27 @@ const ProgressView = ({ onNavigateToSubject }: ProgressViewProps) => {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.4 }}
-        className="glass-panel rounded-2xl p-6"
+        className="glass-panel rounded-xl sm:rounded-2xl p-4 sm:p-6"
       >
-        <h3 className="font-display text-lg font-semibold text-foreground mb-4">Learning Insights</h3>
-        <div className="grid grid-cols-3 gap-4">
-          <div className="p-4 rounded-xl bg-muted/50 text-center">
-            <p className="text-4xl font-display font-bold text-primary mb-1">
+        <h3 className="font-display text-base sm:text-lg font-semibold text-foreground mb-3 sm:mb-4">Learning Insights</h3>
+        <div className="grid grid-cols-3 gap-2 sm:gap-4">
+          <div className="p-3 sm:p-4 rounded-lg sm:rounded-xl bg-muted/50 text-center">
+            <p className="text-2xl sm:text-3xl lg:text-4xl font-display font-bold text-primary mb-1">
               {gamification?.longest_streak || 0}
             </p>
-            <p className="text-sm text-muted-foreground">Longest Streak</p>
+            <p className="text-xs sm:text-sm text-muted-foreground">Longest Streak</p>
           </div>
-          <div className="p-4 rounded-xl bg-muted/50 text-center">
-            <p className="text-4xl font-display font-bold text-success mb-1">
+          <div className="p-3 sm:p-4 rounded-lg sm:rounded-xl bg-muted/50 text-center">
+            <p className="text-2xl sm:text-3xl lg:text-4xl font-display font-bold text-success mb-1">
               {totalTopicsCompleted}
             </p>
-            <p className="text-sm text-muted-foreground">Topics Mastered</p>
+            <p className="text-xs sm:text-sm text-muted-foreground">Topics Mastered</p>
           </div>
-          <div className="p-4 rounded-xl bg-muted/50 text-center">
-            <p className="text-4xl font-display font-bold text-warning mb-1">
+          <div className="p-3 sm:p-4 rounded-lg sm:rounded-xl bg-muted/50 text-center">
+            <p className="text-2xl sm:text-3xl lg:text-4xl font-display font-bold text-warning mb-1">
               {gamification?.total_xp || 0}
             </p>
-            <p className="text-sm text-muted-foreground">Total XP Earned</p>
+            <p className="text-xs sm:text-sm text-muted-foreground">Total XP Earned</p>
           </div>
         </div>
       </motion.div>
