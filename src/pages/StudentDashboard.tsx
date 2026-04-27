@@ -21,6 +21,8 @@ import TimetableView from "@/components/student/TimetableView";
 import { useStudentData } from "@/hooks/useStudentData";
 import { useAuth } from "@/hooks/useAuth";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { MagicBentoCard, MagicBentoGrid } from "@/components/student/MagicBento";
+import AnimatedList from "@/components/student/AnimatedList";
 
 type DashboardView = 'home' | 'subjects' | 'quizzes' | 'timetable' | 'progress' | 'achievements' | 'ai-tutor';
 
@@ -81,29 +83,30 @@ const StudentDashboard = () => {
 
   const renderHomeView = () => (
     <>
-      {/* Stats Grid */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mb-6 sm:mb-8">
+      {/* Stats Grid - Magic Bento */}
+      <MagicBentoGrid className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mb-6 sm:mb-8 p-1 rounded-3xl">
         {[
-          { label: "Total XP", value: gamification?.total_xp || 0, icon: Sparkles, color: "text-primary" },
-          { label: "Current Streak", value: `${gamification?.current_streak || 0} days`, icon: Flame, color: "text-warning" },
-          { label: "Badges Earned", value: earnedBadges.length, icon: BookOpen, color: "text-accent" },
-          { label: "Subjects", value: subjects.length, icon: BookOpen, color: "text-success" },
+          { label: "Total XP", value: gamification?.total_xp || 0, icon: Sparkles, color: "text-primary", glow: "0, 217, 255" },
+          { label: "Current Streak", value: `${gamification?.current_streak || 0} days`, icon: Flame, color: "text-warning", glow: "255, 170, 0" },
+          { label: "Badges Earned", value: earnedBadges.length, icon: BookOpen, color: "text-accent", glow: "132, 0, 255" },
+          { label: "Subjects", value: subjects.length, icon: BookOpen, color: "text-success", glow: "0, 220, 130" },
         ].map((stat, index) => (
           <motion.div
             key={stat.label}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: index * 0.1 }}
-            className="glass-panel rounded-xl sm:rounded-2xl p-3 sm:p-5"
+            transition={{ delay: index * 0.08 }}
           >
-            <div className="flex items-center justify-between mb-2 sm:mb-3">
-              <stat.icon className={`w-5 h-5 sm:w-6 sm:h-6 ${stat.color}`} />
-            </div>
-            <p className="font-display text-xl sm:text-2xl lg:text-3xl font-bold text-foreground">{stat.value}</p>
-            <p className="text-xs sm:text-sm text-muted-foreground">{stat.label}</p>
+            <MagicBentoCard glowColor={stat.glow} className="p-3 sm:p-5 h-full">
+              <div className="flex items-center justify-between mb-2 sm:mb-3">
+                <stat.icon className={`w-5 h-5 sm:w-6 sm:h-6 ${stat.color}`} />
+              </div>
+              <p className="font-display text-xl sm:text-2xl lg:text-3xl font-bold text-foreground">{stat.value}</p>
+              <p className="text-xs sm:text-sm text-muted-foreground">{stat.label}</p>
+            </MagicBentoCard>
           </motion.div>
         ))}
-      </div>
+      </MagicBentoGrid>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
         {/* Main Content Area */}
