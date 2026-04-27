@@ -3,6 +3,8 @@ import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Sparkles, Play, ArrowRight } from "lucide-react";
 import ThemeBackground from "@/components/ThemeBackground";
+import { Suspense, lazy } from "react";
+const FluidGlass = lazy(() => import("@/components/FluidGlass"));
 
 const HeroSection = () => {
   return (
@@ -37,6 +39,13 @@ const HeroSection = () => {
           transition={{ duration: 12, repeat: Infinity, ease: "easeInOut", delay: 2 }}
           className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-secondary/30 rounded-full blur-3xl"
         />
+      </div>
+
+      {/* Fluid Glass Lens overlay - follows cursor */}
+      <div className="absolute inset-0 z-20 pointer-events-none">
+        <Suspense fallback={null}>
+          <FluidGlass lensProps={{ scale: 0.25, ior: 1.15, thickness: 5, chromaticAberration: 0.1, anisotropy: 0.01 }} />
+        </Suspense>
       </div>
 
       <div className="container mx-auto px-4 relative z-10">
