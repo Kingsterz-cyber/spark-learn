@@ -142,20 +142,25 @@ const StudentDashboard = () => {
             className="glass-panel rounded-xl sm:rounded-2xl p-4 sm:p-6"
           >
             <h2 className="font-display text-base sm:text-lg font-semibold text-foreground mb-3 sm:mb-4">My Subjects</h2>
-            <div className="space-y-3 sm:space-y-4">
-              {loading ? (
-                <div className="flex items-center justify-center py-8">
-                  <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin" />
-                </div>
-              ) : subjects.length > 0 ? (
-                subjects.map((subject) => {
+            {loading ? (
+              <div className="flex items-center justify-center py-8">
+                <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin" />
+              </div>
+            ) : subjects.length > 0 ? (
+              <AnimatedList
+                items={subjects}
+                maxHeight="420px"
+                onItemSelect={(subject) => setSelectedSubject(subject)}
+                renderItem={(subject, selected) => {
                   const subjectProgress = getSubjectProgress(subject.id);
                   const topicCount = topics[subject.id]?.length || 0;
                   return (
-                    <button
-                      key={subject.id}
-                      onClick={() => setSelectedSubject(subject)}
-                      className="w-full flex items-center justify-between p-3 sm:p-4 rounded-lg sm:rounded-xl bg-muted/50 hover:bg-muted transition-colors group"
+                    <div
+                      className={`w-full flex items-center justify-between p-3 sm:p-4 rounded-lg sm:rounded-xl transition-all duration-300 group border ${
+                        selected
+                          ? "bg-primary/10 border-primary/40 shadow-glow"
+                          : "bg-muted/40 border-transparent hover:bg-muted/60"
+                      }`}
                     >
                       <div className="flex items-center gap-3 sm:gap-4">
                         <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-lg sm:rounded-xl bg-primary/20 flex items-center justify-center flex-shrink-0">
@@ -170,7 +175,7 @@ const StudentDashboard = () => {
                         <div className="text-right">
                           <p className="text-xs sm:text-sm font-medium text-foreground">{subjectProgress}%</p>
                           <div className="w-16 sm:w-24 h-1.5 sm:h-2 bg-muted rounded-full overflow-hidden">
-                            <div 
+                            <div
                               className="h-full bg-gradient-primary rounded-full transition-all"
                               style={{ width: `${subjectProgress}%` }}
                             />
@@ -178,13 +183,13 @@ const StudentDashboard = () => {
                         </div>
                         <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5 text-muted-foreground group-hover:text-foreground transition-colors flex-shrink-0" />
                       </div>
-                    </button>
+                    </div>
                   );
-                })
-              ) : (
-                <p className="text-center text-muted-foreground py-8 text-sm sm:text-base">No subjects available yet</p>
-              )}
-            </div>
+                }}
+              />
+            ) : (
+              <p className="text-center text-muted-foreground py-8 text-sm sm:text-base">No subjects available yet</p>
+            )}
           </motion.div>
         </div>
 
