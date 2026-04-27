@@ -21,6 +21,8 @@ import TimetableView from "@/components/student/TimetableView";
 import { useStudentData } from "@/hooks/useStudentData";
 import { useAuth } from "@/hooks/useAuth";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { MagicBentoCard, MagicBentoGrid } from "@/components/student/MagicBento";
+import AnimatedList from "@/components/student/AnimatedList";
 
 type DashboardView = 'home' | 'subjects' | 'quizzes' | 'timetable' | 'progress' | 'achievements' | 'ai-tutor';
 
@@ -81,29 +83,30 @@ const StudentDashboard = () => {
 
   const renderHomeView = () => (
     <>
-      {/* Stats Grid */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mb-6 sm:mb-8">
+      {/* Stats Grid - Magic Bento */}
+      <MagicBentoGrid className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mb-6 sm:mb-8 p-1 rounded-3xl">
         {[
-          { label: "Total XP", value: gamification?.total_xp || 0, icon: Sparkles, color: "text-primary" },
-          { label: "Current Streak", value: `${gamification?.current_streak || 0} days`, icon: Flame, color: "text-warning" },
-          { label: "Badges Earned", value: earnedBadges.length, icon: BookOpen, color: "text-accent" },
-          { label: "Subjects", value: subjects.length, icon: BookOpen, color: "text-success" },
+          { label: "Total XP", value: gamification?.total_xp || 0, icon: Sparkles, color: "text-primary", glow: "0, 217, 255" },
+          { label: "Current Streak", value: `${gamification?.current_streak || 0} days`, icon: Flame, color: "text-warning", glow: "255, 170, 0" },
+          { label: "Badges Earned", value: earnedBadges.length, icon: BookOpen, color: "text-accent", glow: "132, 0, 255" },
+          { label: "Subjects", value: subjects.length, icon: BookOpen, color: "text-success", glow: "0, 220, 130" },
         ].map((stat, index) => (
           <motion.div
             key={stat.label}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: index * 0.1 }}
-            className="glass-panel rounded-xl sm:rounded-2xl p-3 sm:p-5"
+            transition={{ delay: index * 0.08 }}
           >
-            <div className="flex items-center justify-between mb-2 sm:mb-3">
-              <stat.icon className={`w-5 h-5 sm:w-6 sm:h-6 ${stat.color}`} />
-            </div>
-            <p className="font-display text-xl sm:text-2xl lg:text-3xl font-bold text-foreground">{stat.value}</p>
-            <p className="text-xs sm:text-sm text-muted-foreground">{stat.label}</p>
+            <MagicBentoCard glowColor={stat.glow} className="p-3 sm:p-5 h-full">
+              <div className="flex items-center justify-between mb-2 sm:mb-3">
+                <stat.icon className={`w-5 h-5 sm:w-6 sm:h-6 ${stat.color}`} />
+              </div>
+              <p className="font-display text-xl sm:text-2xl lg:text-3xl font-bold text-foreground">{stat.value}</p>
+              <p className="text-xs sm:text-sm text-muted-foreground">{stat.label}</p>
+            </MagicBentoCard>
           </motion.div>
         ))}
-      </div>
+      </MagicBentoGrid>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
         {/* Main Content Area */}
@@ -139,20 +142,25 @@ const StudentDashboard = () => {
             className="glass-panel rounded-xl sm:rounded-2xl p-4 sm:p-6"
           >
             <h2 className="font-display text-base sm:text-lg font-semibold text-foreground mb-3 sm:mb-4">My Subjects</h2>
-            <div className="space-y-3 sm:space-y-4">
-              {loading ? (
-                <div className="flex items-center justify-center py-8">
-                  <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin" />
-                </div>
-              ) : subjects.length > 0 ? (
-                subjects.map((subject) => {
+            {loading ? (
+              <div className="flex items-center justify-center py-8">
+                <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin" />
+              </div>
+            ) : subjects.length > 0 ? (
+              <AnimatedList
+                items={subjects}
+                maxHeight="420px"
+                onItemSelect={(subject) => setSelectedSubject(subject)}
+                renderItem={(subject, selected) => {
                   const subjectProgress = getSubjectProgress(subject.id);
                   const topicCount = topics[subject.id]?.length || 0;
                   return (
-                    <button
-                      key={subject.id}
-                      onClick={() => setSelectedSubject(subject)}
-                      className="w-full flex items-center justify-between p-3 sm:p-4 rounded-lg sm:rounded-xl bg-muted/50 hover:bg-muted transition-colors group"
+                    <div
+                      className={`w-full flex items-center justify-between p-3 sm:p-4 rounded-lg sm:rounded-xl transition-all duration-300 group border ${
+                        selected
+                          ? "bg-primary/10 border-primary/40 shadow-glow"
+                          : "bg-muted/40 border-transparent hover:bg-muted/60"
+                      }`}
                     >
                       <div className="flex items-center gap-3 sm:gap-4">
                         <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-lg sm:rounded-xl bg-primary/20 flex items-center justify-center flex-shrink-0">
@@ -167,7 +175,7 @@ const StudentDashboard = () => {
                         <div className="text-right">
                           <p className="text-xs sm:text-sm font-medium text-foreground">{subjectProgress}%</p>
                           <div className="w-16 sm:w-24 h-1.5 sm:h-2 bg-muted rounded-full overflow-hidden">
-                            <div 
+                            <div
                               className="h-full bg-gradient-primary rounded-full transition-all"
                               style={{ width: `${subjectProgress}%` }}
                             />
@@ -175,13 +183,13 @@ const StudentDashboard = () => {
                         </div>
                         <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5 text-muted-foreground group-hover:text-foreground transition-colors flex-shrink-0" />
                       </div>
-                    </button>
+                    </div>
                   );
-                })
-              ) : (
-                <p className="text-center text-muted-foreground py-8 text-sm sm:text-base">No subjects available yet</p>
-              )}
-            </div>
+                }}
+              />
+            ) : (
+              <p className="text-center text-muted-foreground py-8 text-sm sm:text-base">No subjects available yet</p>
+            )}
           </motion.div>
         </div>
 
