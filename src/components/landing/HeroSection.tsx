@@ -42,9 +42,22 @@ const HeroSection = () => {
       </div>
 
       {/* Fluid Glass Lens overlay - follows cursor */}
-      <div className="absolute inset-0 z-20 pointer-events-none">
+      <div className="absolute inset-0 z-20 pointer-events-none hidden md:block">
         <Suspense fallback={null}>
-          <FluidGlass lensProps={{ scale: 0.25, ior: 1.15, thickness: 5, chromaticAberration: 0.1, anisotropy: 0.01 }} />
+          <FluidGlass
+            lensProps={{
+              scale: 0.12,
+              ior: 1.05,
+              thickness: 1.5,
+              chromaticAberration: 0.04,
+              anisotropy: 0.005,
+              transmission: 1,
+              roughness: 0,
+              attenuationDistance: 2,
+              attenuationColor: '#ffffff',
+              color: '#ffffff',
+            }}
+          />
         </Suspense>
       </div>
 
